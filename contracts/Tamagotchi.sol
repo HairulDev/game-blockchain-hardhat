@@ -9,6 +9,17 @@ contract Tamagotchi is ERC721Enumerable {
 
     constructor(string memory name, string memory symbol) ERC721(name, symbol) {}
 
+    struct Pet {
+        uint256 happiness;
+        uint256 hunger;
+        uint256 lastFed;
+    }
+
+    mapping (address => Pet) public pets;
+
+    uint256 public constant feedingInterval = 10 seconds;
+
+
     uint256 public transactionCount;
 
     event Transaction(
@@ -42,7 +53,10 @@ contract Tamagotchi is ERC721Enumerable {
         uint amount,
         string memory message,
         string memory keyword,
-        uint256 tokenId
+        uint256 tokenId,
+        uint256 happiness,
+        uint256 hunger,
+        uint256 lastFed
     ) public {
         require(balanceOf(msg.sender) == 1, "You don't have a pet to burn");
         tokenId = tokenOfOwnerByIndex(msg.sender, 0);
@@ -59,6 +73,7 @@ contract Tamagotchi is ERC721Enumerable {
                 tokenId
             )
         );
+        pets[receiver] = Pet(happiness, hunger, lastFed);
         emit Transaction(
             msg.sender,
             receiver,
@@ -69,7 +84,6 @@ contract Tamagotchi is ERC721Enumerable {
             tokenId
         );
     }
-
 
     function getAllTransactions()
         public
@@ -83,17 +97,6 @@ contract Tamagotchi is ERC721Enumerable {
         return transactionCount;
     }
 
-    struct Pet {
-        uint256 happiness;
-        uint256 hunger;
-        uint256 lastFed;
-    }
-
-    mapping (address => Pet) public pets;
-
-    Pet[] public getpets;
-
-    uint256 public constant feedingInterval = 10 seconds;
 
     function feed() public {
         Pet storage pet = pets[msg.sender];
@@ -133,7 +136,7 @@ contract Tamagotchi is ERC721Enumerable {
         require(balanceOf(msg.sender) == 0, "You already have a pet");
         uint256 tokenId = uint256(keccak256(abi.encodePacked(msg.sender, block.timestamp)));
         _safeMint(msg.sender, tokenId);
-        pets[msg.sender] = Pet(3, 3, block.timestamp);
+        pets[msg.sender] = Pet(0, 5, block.timestamp);
     }
 
     function deletePet() public {

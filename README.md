@@ -13,3 +13,6 @@ npx hardhat node
 node scripts/sample-script.js
 npx hardhat help
 ```
+
+
+join magnet other blossom matter stick atom film license smart squirrel ready

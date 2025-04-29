@@ -15,4 +15,3 @@ npx hardhat help
 ```
 
 
-join magnet other blossom matter stick atom film license smart squirrel ready
